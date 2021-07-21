@@ -17,7 +17,7 @@ import java.util.Optional;
 @Service
 public class CategoryServiceImpl implements CategoryService {
 
-    static final Striang TREE_ROOT = "0";
+    static final String TREE_ROOT = "0";
 
     @Autowired
     private CategoryDao categoryDao;
