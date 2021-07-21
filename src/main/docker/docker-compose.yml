@@ -1,0 +1,13 @@
+version: '3'
+services:
+
+  tds_simulation:
+    image: wisdomchain/tds_simulation
+    container_name: tds_simulation
+    restart: always
+    ports:
+      - 8088:8080
+
+networks:
+  dandelion:
+    driver: tds_simulation_bridge

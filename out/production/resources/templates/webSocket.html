@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>WebSocket</title>
+
+</head>
+<body>
+<h3>hello socket</h3>
+<p>【userId】：<div><input id="userId" name="userId" type="text" value="10"></div>
+<p>【type】：<div><input id="type" name="contentText" type="text"></div>
+<p>【roomid】：<div><input id="roomid" name="contentText" type="text"></div>
+<p>【classid】：<div><input id="classid" name="contentText" type="text"></div>
+<p>【name】：<div><input id="name" name="contentText" type="text"></div>
+<p>【amount】：<div><input id="amount" name="contentText" type="text"></div>
+<p>【from】：<div><input id="from" name="contentText" type="text"></div>
+<p>【to】：<div><input id="to" name="contentText" type="text"></div>
+<p>【数量】：<div><input id="numb" name="contentText" type="text"></div>
+<p>操作:<div><a onclick="openSocket()">开启socket</a></div>
+<p>【加入】：<div><a onclick="join()">发送消息</a></div>
+<p>【加入机器人】：<div><a onclick="robot()">发送消息</a></div>
+<p>【发币】：<div><a onclick="coin()">发送消息</a></div>
+<p>【转账】：<div><a onclick="transaction()">发送消息</a></div>
+<p>【退出】：<div><a onclick="quit()">发送消息</a></div>
+<p>【测试】：<div><a onclick="test()">发送消息</a></div>
+
+
+</body>
+<script>
+
+
+    var socket;
+    function openSocket() {
+        if(typeof(WebSocket) == "undefined") {
+            console.log("您的浏览器不支持WebSocket");
+        }else{
+            console.log("您的浏览器支持WebSocket");
+            //实现化WebSocket对象，指定要连接的服务器地址与端口  建立连接
+            var userId = document.getElementById('userId').value;
+            // var socketUrl="ws://127.0.0.1:22599/webSocket/"+userId;
+            var socketUrl="ws://192.168.1.167:8082/webSocket/"+userId;
+            console.log(socketUrl);
+            if(socket!=null){
+                socket.close();
+                socket=null;
+            }
+            socket = new WebSocket(socketUrl);
+            //打开事件
+            socket.onopen = function() {
+                console.log("websocket已打开");
+                //socket.send("这是来自客户端的消息" + location.href + new Date());
+            };
+            //获得消息事件
+            socket.onmessage = function(msg) {
+                var serverMsg = "收到服务端信息：" + msg.data;
+                console.log(serverMsg);
+                //发现消息进入    开始处理前端触发逻辑
+            };
+            //关闭事件
+            socket.onclose = function() {
+                console.log("websocket已关闭");
+            };
+            //发生了错误事件
+            socket.onerror = function() {
+                console.log("websocket发生了错误");
+            }
+        }
+    }
+    function join() {
+        if(typeof(WebSocket) == "undefined") {
+            console.log("您的浏览器不支持WebSocket");
+        }else {
+            // console.log("您的浏览器支持WebSocket");
+            var userId = document.getElementById('userId').value;
+            var type = document.getElementById('type').value;
+            var msg = '{"userID":"'+userId+'","type":"'+type+'","data":{"user_id":"'+userId+'"}}';
+            console.log(msg);
+            socket.send(msg);
+        }
+    }
+
+    function robot() {
+        if(typeof(WebSocket) == "undefined") {
+            console.log("您的浏览器不支持WebSocket");
+        }else {
+            // console.log("您的浏览器支持WebSocket");
+            var userId = document.getElementById('userId').value;
+            var type = document.getElementById('type').value;
+            var roomid = document.getElementById('roomid').value;
+            var classid = document.getElementById('classid').value;
+            var msg = '{"userID":"'+userId+'","type":"'+type+'","data":{"room_id":"'+roomid+'","class_id":"'+classid+'"}}';
+            console.log(msg);
+            socket.send(msg);
+        }
+    }
+    function coin() {
+        if(typeof(WebSocket) == "undefined") {
+            console.log("您的浏览器不支持WebSocket");
+        }else {
+            // console.log("您的浏览器支持WebSocket");
+            var userId = document.getElementById('userId').value;
+            var type = document.getElementById('type').value;
+            var roomid = document.getElementById('roomid').value;
+            var classid = document.getElementById('classid').value;
+            var name = document.getElementById('name').value;
+            var amount = document.getElementById('amount').value;
+            var msg = '{"userID":"'+userId+'","type":"'+type+'","data":{"room_id":"'+roomid+'","class_id":"'+classid+'","name":"'+name+'","amount":"'+amount+'"}}';
+            console.log(msg);
+            socket.send(msg);
+        }
+    }
+
+    function transaction() {
+        if(typeof(WebSocket) == "undefined") {
+            console.log("您的浏览器不支持WebSocket");
+        }else {
+            // console.log("您的浏览器支持WebSocket");
+            var userId = document.getElementById('userId').value;
+            var type = document.getElementById('type').value;
+            var roomid = document.getElementById('roomid').value;
+            var name = document.getElementById('name').value;
+            var amount = document.getElementById('amount').value;
+            var from = document.getElementById('from').value;
+            var to = document.getElementById('to').value;
+            var msg = '{"userID":"'+userId+'","type":"'+type+'","data":{"room_id":"'+roomid+'","amount":"'+amount+'","from":"'+from+'","to":"'+to+'"}}';
+            console.log(msg);
+            socket.send(msg);
+        }
+    }
+
+    function quit() {
+        if(typeof(WebSocket) == "undefined") {
+            console.log("您的浏览器不支持WebSocket");
+        }else {
+            // console.log("您的浏览器支持WebSocket");
+            var userId = document.getElementById('userId').value;
+            var type = document.getElementById('type').value;
+            var roomid = document.getElementById('roomid').value;
+            var msg = '{"type":"'+type+'","data":{"user_id":"'+userId+'","room_id":"'+roomid+'"}}';
+            console.log(msg);
+            socket.send(msg);
+        }
+    }
+
+    var sleep = function(time) {
+        var startTime = new Date().getTime() + parseInt(time, 10);
+        while(new Date().getTime() < startTime) {}
+    };
+
+
+
+    function test() {
+        var numb = document.getElementById('numb').value;
+        for (var i = 0;i<numb;i++){
+            if(typeof(WebSocket) == "undefined") {
+                console.log("您的浏览器不支持WebSocket");
+            }else{
+                console.log("您的浏览器支持WebSocket");
+                //实现化WebSocket对象，指定要连接的服务器地址与端口  建立连接
+                var userId = document.getElementById('userId').value;
+                // var socketUrl="ws://127.0.0.1:22599/webSocket/"+userId;
+                var socketUrl="ws://192.168.1.167:8082/webSocket/"+i;
+                sleep(2500); // 延时函数，单位ms
+                console.log(socketUrl);
+                if(socket!=null){
+                    socket.close();
+                    socket=null;
+                }
+                socket = new WebSocket(socketUrl);
+                //打开事件
+                socket.onopen = function() {
+                    console.log("websocket已打开");
+                    //socket.send("这是来自客户端的消息" + location.href + new Date());
+                };
+                //获得消息事件
+                socket.onmessage = function(msg) {
+                    var serverMsg = "收到服务端信息：" + msg.data;
+                    console.log(serverMsg);
+                    //发现消息进入    开始处理前端触发逻辑
+                };
+                //关闭事件
+                socket.onclose = function() {
+                    console.log("websocket已关闭");
+                };
+                //发生了错误事件
+                socket.onerror = function() {
+                    console.log("websocket发生了错误");
+                }
+            }
+        }
+
+    }
+
+</script>
+</html>

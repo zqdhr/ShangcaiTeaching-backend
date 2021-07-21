@@ -1,0 +1,68 @@
+plugins {
+    id 'org.springframework.boot' version '2.2.0.RELEASE'
+    id 'io.spring.dependency-management' version '1.0.9.RELEASE'
+    id 'java'
+}
+
+group = 'org.tdf'
+version = '1.0.1'
+sourceCompatibility = '1.8'
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+    compile.exclude group: 'org.springframework.boot', module: 'spring-boot-starter-tomcat'
+    compile.exclude group: 'org.apache.tomcat'
+    compile.exclude group: 'org.apache.tomcat.embed'
+}
+
+repositories {
+    mavenCentral()
+}
+
+ext{
+    jjwtVersion = '0.10.7'
+    poiVersion='4.1.2'
+    jnaVersion='5.5.0'
+    oshiVersion='5.2.5'
+    postgresql='42.2.12'
+    fastjson='1.2.62'
+    httpVersion='6.0'
+}
+
+dependencies {
+    compile 'org.springframework.boot:spring-boot-starter-data-jpa'
+    compile 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    compile 'org.springframework.boot:spring-boot-starter-web'
+    compile 'org.springframework.boot:spring-boot-starter-undertow'
+    // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-websocket
+    compile 'org.springframework.boot:spring-boot-starter-websocket'
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+    annotationProcessor 'org.projectlombok:lombok'
+    testImplementation('org.springframework.boot:spring-boot-starter-test') {
+        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+    }
+    testCompile "junit:junit:4.12"
+
+    compile "io.jsonwebtoken:jjwt-api:${jjwtVersion}"
+    runtime "io.jsonwebtoken:jjwt-impl:${jjwtVersion}",
+            // Uncomment the next line if you want to use RSASSA-PSS (PS256, PS384, PS512) algorithms:
+            //'org.bouncycastle:bcprov-jdk15on:1.60',
+            "io.jsonwebtoken:jjwt-jackson:${jjwtVersion}"
+    runtimeOnly 'com.h2database:h2'
+    runtimeOnly 'mysql:mysql-connector-java'
+    compile "org.apache.poi:poi:${poiVersion}"
+    compile "org.apache.poi:poi-ooxml:${poiVersion}"
+    compile "com.github.oshi:oshi-core:${oshiVersion}"
+    compile "net.java.dev.jna:jna:${jnaVersion}"
+    compile "net.java.dev.jna:jna-platform:${jnaVersion}"
+    compile "org.postgresql:postgresql:${postgresql}"
+    compile "com.alibaba:fastjson:${fastjson}"
+    compile "com.github.kevinsawicki:http-request:${httpVersion}"
+}
+
+test {
+    useJUnitPlatform()
+}

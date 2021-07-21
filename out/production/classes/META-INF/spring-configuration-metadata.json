@@ -1,0 +1,28 @@
+{
+  "groups": [
+    {
+      "name": "sim.jwt",
+      "type": "org.tdf.sim.config.JWTConfig",
+      "sourceType": "org.tdf.sim.config.JWTConfig"
+    }
+  ],
+  "properties": [
+    {
+      "name": "sim.jwt.algorithm",
+      "type": "java.lang.String",
+      "sourceType": "org.tdf.sim.config.JWTConfig"
+    },
+    {
+      "name": "sim.jwt.expired-in",
+      "type": "java.lang.Long",
+      "sourceType": "org.tdf.sim.config.JWTConfig",
+      "defaultValue": 0
+    },
+    {
+      "name": "sim.jwt.private-key",
+      "type": "java.lang.String",
+      "sourceType": "org.tdf.sim.config.JWTConfig"
+    }
+  ],
+  "hints": []
+}
