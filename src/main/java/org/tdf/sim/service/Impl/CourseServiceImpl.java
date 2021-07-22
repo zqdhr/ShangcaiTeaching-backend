@@ -117,6 +117,7 @@ public class CourseServiceImpl implements CourseService {
 //        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
 //        System.out.println(df.format(new Date()));
         //        System.out.println(df.format(new Date()));
+
 //        return courseDao.findAllByTypeAndUserID(type, ownerID).stream().map(x -> {
 //            List<CategoryEntity> categoryEntities = categoryDao.findAllCategoriesByCourseID(x.getId());
 //            List<ClassEntity> classEntities = classDao.findAllClassesByCourseID(x.getId());

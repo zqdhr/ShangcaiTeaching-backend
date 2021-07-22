@@ -3,11 +3,11 @@ spring:
 #    url: jdbc:postgresql://pgm-j6cm76z49d3e04939o.pg.rds.aliyuncs.com:1433/tds_simulation
 #    username: srchain
 #    password: 123456789
-  url: jdbc:postgresql://192.168.1.188:5436/tds_simulation
+  url: jdbc:postgresql://192.168.1.188:5432/shangcai
   username: postgres
-  password: password
+  password: 123456
 
-  jpa:a
+  jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     # 打印 sql 语句
     show-sql: 'true'

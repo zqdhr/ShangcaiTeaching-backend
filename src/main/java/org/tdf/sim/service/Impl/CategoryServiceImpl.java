@@ -49,7 +49,6 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public void saveCategory(Category category) {
         categoryDao.save(CategoryEntity.builder()
-                .annex(category.annex)
                 .categoryNameChs(category.categoryNameChs)
                 .categoryNameEn(category.categoryNameEn)
                 .parentID(category.parentID)
