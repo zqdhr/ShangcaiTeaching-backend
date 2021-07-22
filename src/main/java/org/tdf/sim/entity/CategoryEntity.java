@@ -42,16 +42,10 @@ public class CategoryEntity {
     private int priority;
 
     /**
-     * 1.目录 2.课程 3.附件
+     * 1.目录 2.课程 3.实验
      */
     @Column(name = "type", nullable = false)
     private int type;
-
-    /**
-     * 附件路径
-     */
-    @Column(name = "annex")
-    private String annex;
 
     @CreatedDate
     @Column(name = "created_at")

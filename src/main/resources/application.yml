@@ -7,7 +7,7 @@ spring:
   username: postgres
   password: password
 
-  jpa:a
+  jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     # 打印 sql 语句
     show-sql: 'true'
