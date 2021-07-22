@@ -39,76 +39,77 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public Pair<Boolean, String> saveCourse(AddCoursePost addCoursePost) {
-        if (addCoursePost.classes.size() > 0 && addCoursePost.classes.stream().noneMatch(x -> classDao.findById(x).isPresent())) {
-            return new Pair<>(false, "classes is error");
-        }
-        if (addCoursePost.categories.stream().noneMatch(x -> categoryDao.findById(x).isPresent())) {
-            return new Pair<>(false, "categories is error");
-        }
-        Optional<UserEntity> optional = userDao.findById(addCoursePost.userID);
-        if (!optional.isPresent()) {
-            return new Pair<>(false, "user_id is error");
-        }
-        if (optional.get().getRoleID() != UserEntity.ROLE_ID.TEACHER) {
-            return new Pair<>(false, "user_id is not teacher role");
-        }
-        CourseEntity courseEntity = courseDao.save(CourseEntity.builder()
-                .userID(addCoursePost.userID)
-                .courseName(addCoursePost.courseName)
-                .type(addCoursePost.type)
-                .build());
-        courseClassDao.saveAll(addCoursePost.classes.stream().map(x -> CourseClassEntity.builder()
-                .courseID(courseEntity.getId())
-                .classID(x).build()
-        ).collect(Collectors.toList()));
-
-        courseCategoryDao.saveAll(addCoursePost.categories.stream().map(x -> CourseCategoryEntity.builder()
-                .courseID(courseEntity.getId())
-                .categoryID(x).build()
-        ).collect(Collectors.toList()));
+//        if (addCoursePost.classes.size() > 0 && addCoursePost.classes.stream().noneMatch(x -> classDao.findById(x).isPresent())) {
+//            return new Pair<>(false, "classes is error");
+//        }
+//        if (addCoursePost.categories.stream().noneMatch(x -> categoryDao.findById(x).isPresent())) {
+//            return new Pair<>(false, "categories is error");
+//        }
+//        Optional<UserEntity> optional = userDao.findById(addCoursePost.userID);
+//        if (!optional.isPresent()) {
+//            return new Pair<>(false, "user_id is error");
+//        }
+//        if (optional.get().getRoleID() != UserEntity.ROLE_ID.TEACHER) {
+//            return new Pair<>(false, "user_id is not teacher role");
+//        }
+//        CourseEntity courseEntity = courseDao.save(CourseEntity.builder()
+//                .userID(addCoursePost.userID)
+//                .courseName(addCoursePost.courseName)
+//                .type(addCoursePost.type)
+//                .build());
+//        courseClassDao.saveAll(addCoursePost.classes.stream().map(x -> CourseClassEntity.builder()
+//                .courseID(courseEntity.getId())
+//                .classID(x).build()
+//        ).collect(Collectors.toList()));
+//
+//        courseCategoryDao.saveAll(addCoursePost.categories.stream().map(x -> ExperimentCategoryEntity.builder()
+//                .courseID(courseEntity.getId())
+//                .categoryID(x).build()
+//        ).collect(Collectors.toList()));
         return new Pair<>(true, "");
     }
 
     @Override
     public List<CourseResp> getCourseHaveClasses(String ownerID, int type) {
-        Optional<UserEntity> optional = userDao.findById(ownerID);
-        if (!optional.isPresent()) {
-            return new ArrayList<>();
-        }
-        if (optional.get().getRoleID() != UserEntity.ROLE_ID.STUDENT) {
-            return new ArrayList<>();
-        }
-        if (StringUtils.isEmpty(optional.get().getClassID())) {
-            return new ArrayList<>();
-        }
-
-        return courseDao.findAllByType(type).stream().filter(x -> courseClassDao.findAllByCourseID(x.getId()).stream().anyMatch(v -> v.getClassID().equals(optional.get().getClassID()))).map(x -> {
-            List<CategoryEntity> categoryEntities = categoryDao.findAllCategoriesByCourseID(x.getId());
-            List<ClassEntity> classEntities = classDao.findAllClassesByCourseID(x.getId());
-            return CourseResp.builder()
-                    .courseID(x.getId())
-                    .courseName(x.getCourseName())
-                    .categoryList(categoryEntities.stream().map(y -> Category.builder()
-                            .annex(y.getAnnex())
-                            .categoryID(y.getId())
-                            .categoryNameChs(y.getCategoryNameChs())
-                            .categoryNameEn(y.getCategoryNameEn())
-                            .parentID(y.getParentID())
-                            .priority(y.getPriority())
-                            .status(y.getStatus())
-                            .type(y.getType())
-                            .build()).collect(Collectors.toList()))
-                    .classesList(
-                            classEntities.stream().map(z -> Classes.builder()
-                                    .classesID(z.getId())
-                                    .className(z.getClassName())
-                                    .department(z.getDepartment())
-                                    .gradeName(z.getGradeName())
-                                    .major(z.getMajor())
-                                    .build()).collect(Collectors.toList())
-                    )
-                    .build();
-        }).collect(Collectors.toList());
+//        Optional<UserEntity> optional = userDao.findById(ownerID);
+//        if (!optional.isPresent()) {
+//            return new ArrayList<>();
+//        }
+//        if (optional.get().getRoleID() != UserEntity.ROLE_ID.STUDENT) {
+//            return new ArrayList<>();
+//        }
+//        if (StringUtils.isEmpty(optional.get().getClassID())) {
+//            return new ArrayList<>();
+//        }
+//
+//        return courseDao.findAllByType(type).stream().filter(x -> courseClassDao.findAllByCourseID(x.getId()).stream().anyMatch(v -> v.getClassID().equals(optional.get().getClassID()))).map(x -> {
+//            List<CategoryEntity> categoryEntities = categoryDao.findAllCategoriesByCourseID(x.getId());
+//            List<ClassEntity> classEntities = classDao.findAllClassesByCourseID(x.getId());
+//            return CourseResp.builder()
+//                    .courseID(x.getId())
+//                    .courseName(x.getCourseName())
+//                    .categoryList(categoryEntities.stream().map(y -> Category.builder()
+//                            .annex(y.getAnnex())
+//                            .categoryID(y.getId())
+//                            .categoryNameChs(y.getCategoryNameChs())
+//                            .categoryNameEn(y.getCategoryNameEn())
+//                            .parentID(y.getParentID())
+//                            .priority(y.getPriority())
+//                            .status(y.getStatus())
+//                            .type(y.getType())
+//                            .build()).collect(Collectors.toList()))
+//                    .classesList(
+//                            classEntities.stream().map(z -> Classes.builder()
+//                                    .classesID(z.getId())
+//                                    .className(z.getClassName())
+//                                    .department(z.getDepartment())
+//                                    .gradeName(z.getGradeName())
+//                                    .major(z.getMajor())
+//                                    .build()).collect(Collectors.toList())
+//                    )
+//                    .build();
+//        }).collect(Collectors.toList());
+        return null;
     }
 
     @Override
@@ -116,35 +117,36 @@ public class CourseServiceImpl implements CourseService {
 //        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
 //        System.out.println(df.format(new Date()));
         //        System.out.println(df.format(new Date()));
-        return courseDao.findAllByTypeAndUserID(type, ownerID).stream().map(x -> {
-            List<CategoryEntity> categoryEntities = categoryDao.findAllCategoriesByCourseID(x.getId());
-            List<ClassEntity> classEntities = classDao.findAllClassesByCourseID(x.getId());
-            classEntities.forEach(c -> c.setNumber(userDao.findAllByClassID(c.getId()).size()));
-            return CourseResp.builder()
-                    .courseID(x.getId())
-                    .courseName(x.getCourseName())
-                    .categoryList(categoryEntities.stream().map(y -> Category.builder()
-                            .annex(y.getAnnex())
-                            .categoryID(y.getId())
-                            .categoryNameChs(y.getCategoryNameChs())
-                            .categoryNameEn(y.getCategoryNameEn())
-                            .parentID(y.getParentID())
-                            .priority(y.getPriority())
-                            .status(y.getStatus())
-                            .type(y.getType())
-                            .build()).collect(Collectors.toList()))
-                    .classesList(
-                            classEntities.stream().map(z -> Classes.builder()
-                                    .classesID(z.getId())
-                                    .className(z.getClassName())
-                                    .department(z.getDepartment())
-                                    .gradeName(z.getGradeName())
-                                    .major(z.getMajor())
-                                    .numbers(z.getNumber())
-                                    .build()).collect(Collectors.toList())
-                    )
-                    .build();
-        }).collect(Collectors.toList());
+//        return courseDao.findAllByTypeAndUserID(type, ownerID).stream().map(x -> {
+//            List<CategoryEntity> categoryEntities = categoryDao.findAllCategoriesByCourseID(x.getId());
+//            List<ClassEntity> classEntities = classDao.findAllClassesByCourseID(x.getId());
+//            classEntities.forEach(c -> c.setNumber(userDao.findAllByClassID(c.getId()).size()));
+//            return CourseResp.builder()
+//                    .courseID(x.getId())
+//                    .courseName(x.getCourseName())
+//                    .categoryList(categoryEntities.stream().map(y -> Category.builder()
+//                            .annex(y.getAnnex())
+//                            .categoryID(y.getId())
+//                            .categoryNameChs(y.getCategoryNameChs())
+//                            .categoryNameEn(y.getCategoryNameEn())
+//                            .parentID(y.getParentID())
+//                            .priority(y.getPriority())
+//                            .status(y.getStatus())
+//                            .type(y.getType())
+//                            .build()).collect(Collectors.toList()))
+//                    .classesList(
+//                            classEntities.stream().map(z -> Classes.builder()
+//                                    .classesID(z.getId())
+//                                    .className(z.getClassName())
+//                                    .department(z.getDepartment())
+//                                    .gradeName(z.getGradeName())
+//                                    .major(z.getMajor())
+//                                    .numbers(z.getNumber())
+//                                    .build()).collect(Collectors.toList())
+//                    )
+//                    .build();
+//        }).collect(Collectors.toList());
+        return null;
     }
 
     @Override

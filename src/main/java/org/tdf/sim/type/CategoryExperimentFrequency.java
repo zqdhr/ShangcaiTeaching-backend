@@ -7,13 +7,13 @@ import lombok.Getter;
 import java.time.LocalDateTime;
 
 @Builder
-public class CategoryCourseFrequency {
+public class CategoryExperimentFrequency {
 
-    @JsonProperty("category_name_chs")
-    public String categoryNameChs;
+    @JsonProperty("experiment_name_chs")
+    public String experimentNameChs;
 
-    @JsonProperty("category_name_en")
-    public String categoryNameEn;
+    @JsonProperty("experiment_name_en")
+    public String experimentNameEn;
 
     @JsonProperty("frequency")
     @Getter

@@ -9,6 +9,6 @@ import java.util.List;
 
 @Repository
 public interface CategoryDao extends JpaRepository<CategoryEntity, String> {
-    @Query(value = "SELECT category.* from category inner JOIN  course_category on category.id = course_category.category_id and course_category.course_id = ?", nativeQuery = true)
-    List<CategoryEntity> findAllCategoriesByCourseID(String courseID);
+    @Query(value = "SELECT category.* from category inner JOIN  experiment_category on category.id = experiment_category.category_id and experiment_category.experiment_id = ?", nativeQuery = true)
+    List<CategoryEntity> findAllCategoriesByExperimentID(String experimentID);
 }

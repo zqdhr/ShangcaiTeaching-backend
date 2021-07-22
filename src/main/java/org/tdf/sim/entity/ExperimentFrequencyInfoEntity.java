@@ -15,16 +15,16 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Table(name = "course_frequency_info")
-public class CourseFrequencyInfoEntity {
+@Table(name = "experiment_frequency_info")
+public class ExperimentFrequencyInfoEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private String id;
 
-    @Column(name = "category_id", nullable = false)
-    private String categoryID;
+    @Column(name = "experiment_id", nullable = false)
+    private String experimentID;
 
     @Column(name = "user_id", nullable = false)
     private String userID;

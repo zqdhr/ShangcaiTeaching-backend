@@ -15,7 +15,7 @@ public class VisitCoursePost {
     private String userID;
 
     @NotBlank(message = "category_id不能为空")
-    @JsonProperty("category_id")
-    private String categoryID;
+    @JsonProperty("experiment_id")
+    private String experimentID;
 
 }

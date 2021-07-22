@@ -70,7 +70,7 @@ public class UserController {
 
     @PostMapping(value = "/visit_course")
     public Response<String> visitCourse(@RequestBody @Validated VisitCoursePost visitCoursePost) {
-        Pair<Boolean, String> pair = coreService.visitCourse(visitCoursePost.getUserID(), visitCoursePost.getCategoryID());
+        Pair<Boolean, String> pair = coreService.visitExperiment(visitCoursePost.getUserID(), visitCoursePost.getExperimentID());
         if (pair.getKey()) {
             return Response.success(null);
         } else {
@@ -79,12 +79,12 @@ public class UserController {
     }
 
     @GetMapping("/get_visit_course_frequency")
-    public Response<Page<CategoryCourseFrequency>> getVisitCourseFrequency(@RequestParam(value = "per_page") Integer perPage,
-                                                                           @RequestParam(value = "page") Integer page,
-                                                                           @RequestParam(value = "category_name", required = false) String categoryName,
-                                                                           @RequestParam(value = "start", required = false) String start,
-                                                                           @RequestParam(value = "end", required = false) String end) {
-        return Response.success(PageTool.getPageList(coreService.getVisitCourseFrequency(categoryName, start, end), page, perPage));
+    public Response<Page<CategoryExperimentFrequency>> getVisitCourseFrequency(@RequestParam(value = "per_page") Integer perPage,
+                                                                               @RequestParam(value = "page") Integer page,
+                                                                               @RequestParam(value = "experiment_name", required = false) String experimentName,
+                                                                               @RequestParam(value = "start", required = false) String start,
+                                                                               @RequestParam(value = "end", required = false) String end) {
+        return Response.success(PageTool.getPageList(coreService.getVisitExperimentFrequency(experimentName, start, end), page, perPage));
     }
 
     @DeleteMapping(value = "/delete_user")

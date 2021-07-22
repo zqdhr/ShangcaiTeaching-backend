@@ -10,9 +10,9 @@ public interface CoreService {
 
     List<OnlineStudent> getOnlineStudents(List<String> ids);
 
-    Pair<Boolean, String> visitCourse(String userID, String categoryID);
+    Pair<Boolean, String> visitExperiment(String userID, String experimentID);
 
-    List<CategoryCourseFrequency> getVisitCourseFrequency(String categoryName, String start, String end);
+    List<CategoryExperimentFrequency> getVisitExperimentFrequency(String experimentName, String start, String end);
 
     Pair<Boolean, String> uploadExcel(String userID, InputStream in, String filename) throws IOException;
 

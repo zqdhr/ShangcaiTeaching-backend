@@ -41,6 +41,9 @@ public class CategoryEntity {
     @Column(name = "priority")
     private int priority;
 
+    @Column(name = "link_id")
+    private String linkID;
+
     /**
      * 1.目录 2.课程 3.附件
      */

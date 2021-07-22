@@ -13,11 +13,11 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "course_category", indexes = {@Index(columnList = "course_id", name = "index_course_category_course_id")})
+@Table(name = "experiment_category", indexes = {@Index(columnList = "course_id", name = "index_course_category_course_id")})
 @EntityListeners(AuditingEntityListener.class)
 @Builder
 @Getter
-public class CourseCategoryEntity {
+public class ExperimentCategoryEntity {
 
     @Id
     @GeneratedValue(generator = "system-uuid")
@@ -28,8 +28,8 @@ public class CourseCategoryEntity {
     @Column(name = "course_id", nullable = false)
     private String courseID;
 
-    @Column(name = "category_id", nullable = false)
-    private String categoryID;
+    @Column(name = "experiment_id", nullable = false)
+    private String experimentID;
 
     @CreatedDate
     @Column(name = "created_at", nullable = false)

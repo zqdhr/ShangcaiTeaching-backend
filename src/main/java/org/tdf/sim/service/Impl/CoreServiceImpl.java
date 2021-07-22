@@ -30,21 +30,21 @@ public class CoreServiceImpl implements CoreService {
 
     private ClassDao classDao;
 
-    private CourseFrequencyInfoDao courseFrequencyInfoDao;
+    private ExperimentFrequencyInfoDao experimentFrequencyInfoDao;
 
-    private CategoryCourseFrequencyDao categoryCourseFrequencyDao;
+    private ExperimentFrequencyDao experimentFrequencyDao;
 
     private CategoryDao categoryDao;
 
     public CoreServiceImpl(UserDao userDao,
                            ClassDao classDao,
-                           CourseFrequencyInfoDao courseFrequencyInfoDao,
-                           CategoryCourseFrequencyDao categoryCourseFrequencyDao,
+                           ExperimentFrequencyInfoDao experimentFrequencyInfoDao,
+                           ExperimentFrequencyDao experimentFrequencyDao,
                            CategoryDao categoryDao) {
         this.userDao = userDao;
         this.classDao = classDao;
-        this.courseFrequencyInfoDao = courseFrequencyInfoDao;
-        this.categoryCourseFrequencyDao = categoryCourseFrequencyDao;
+        this.experimentFrequencyInfoDao = experimentFrequencyInfoDao;
+        this.experimentFrequencyDao = experimentFrequencyDao;
         this.categoryDao = categoryDao;
     }
 
@@ -72,49 +72,49 @@ public class CoreServiceImpl implements CoreService {
     }
 
     @Override
-    public Pair<Boolean, String> visitCourse(String userID, String categoryID) {
-        int counts = courseFrequencyInfoDao.countByVisitCourse(userID, categoryID);
+    public Pair<Boolean, String> visitExperiment(String userID, String experimentID) {
+        int counts = experimentFrequencyInfoDao.countByVisitExperiment(userID, experimentID);
         if (counts != 0) {
             return new Pair<>(true, "");
         }
-        courseFrequencyInfoDao.save(CourseFrequencyInfoEntity.builder().categoryID(categoryID).userID(userID).build());
-        Optional<CategoryCourseFrequencyEntity> optional = categoryCourseFrequencyDao.findCurrentVisitCourse(categoryID);
+        experimentFrequencyInfoDao.save(ExperimentFrequencyInfoEntity.builder().experimentID(experimentID).userID(userID).build());
+        Optional<ExperimentFrequencyEntity> optional = experimentFrequencyDao.findCurrentVisitExperiment(experimentID);
         if (optional.isPresent()) {
-            CategoryCourseFrequencyEntity entity = optional.get();
+            ExperimentFrequencyEntity entity = optional.get();
             entity.setFrequency(entity.getFrequency() + 1);
-            categoryCourseFrequencyDao.save(entity);
+            experimentFrequencyDao.save(entity);
         } else {
-            CategoryCourseFrequencyEntity entity = CategoryCourseFrequencyEntity.builder()
-                    .categoryID(categoryID).frequency(1).build();
-            categoryCourseFrequencyDao.save(entity);
+            ExperimentFrequencyEntity entity = ExperimentFrequencyEntity.builder()
+                    .experimentID(experimentID).frequency(1).build();
+            experimentFrequencyDao.save(entity);
         }
         return new Pair<>(true, "");
     }
 
     @Override
-    public List<CategoryCourseFrequency> getVisitCourseFrequency(String categoryName, String start, String end) {
-        List<CategoryCourseFrequencyEntity> entities = categoryCourseFrequencyDao.findAll()
-                .stream().sorted(Comparator.comparing(CategoryCourseFrequencyEntity::getCreatedAt).reversed())
+    public List<CategoryExperimentFrequency> getVisitExperimentFrequency(String experimentName, String start, String end) {
+        List<ExperimentFrequencyEntity> entities = experimentFrequencyDao.findAll()
+                .stream().sorted(Comparator.comparing(ExperimentFrequencyEntity::getCreatedAt).reversed())
                 .collect(Collectors.toList());
-        List<CategoryCourseFrequency> list = entities.stream().map(x -> {
-            Optional<CategoryEntity> optional = categoryDao.findById(x.getCategoryID());
+        List<CategoryExperimentFrequency> list = entities.stream().map(x -> {
+            Optional<CategoryEntity> optional = categoryDao.findById(x.getExperimentID());
             if (optional.isPresent()) {
-                return CategoryCourseFrequency.builder()
+                return CategoryExperimentFrequency.builder()
                         .createdAt(x.getCreatedAt())
                         .frequency(x.getFrequency())
-                        .categoryNameChs(optional.get().getCategoryNameChs())
-                        .categoryNameEn(optional.get().getCategoryNameEn())
+                        .experimentNameChs(optional.get().getCategoryNameChs())
+                        .experimentNameEn(optional.get().getCategoryNameEn())
                         .build();
             } else {
-                return CategoryCourseFrequency.builder()
+                return CategoryExperimentFrequency.builder()
                         .createdAt(x.getCreatedAt())
                         .frequency(x.getFrequency())
                         .build();
             }
         }).collect(Collectors.toList());
-        if (!StringUtils.isEmpty(categoryName)) {
-            list = list.stream().filter(x -> (x.categoryNameChs != null && x.categoryNameChs.contains(categoryName)) ||
-                    (x.categoryNameEn != null && x.categoryNameEn.contains(categoryName))).collect(Collectors.toList());
+        if (!StringUtils.isEmpty(experimentName)) {
+            list = list.stream().filter(x -> (x.experimentNameChs != null && x.experimentNameChs.contains(experimentName)) ||
+                    (x.experimentNameEn != null && x.experimentNameEn.contains(experimentName))).collect(Collectors.toList());
         }
         if (!StringUtils.isEmpty(start)) {
             DateTimeFormatter df = new DateTimeFormatterBuilder()
@@ -138,7 +138,7 @@ public class CoreServiceImpl implements CoreService {
             LocalDateTime endDate = LocalDateTime.parse(end, df);
             list = list.stream().filter(x -> x.createdAt.isBefore(endDate)).collect(Collectors.toList());
         }
-        list = list.stream().sorted(Comparator.comparing(CategoryCourseFrequency::getFrequency).reversed()).collect(Collectors.toList());
+        list = list.stream().sorted(Comparator.comparing(CategoryExperimentFrequency::getFrequency).reversed()).collect(Collectors.toList());
         return list;
     }
 

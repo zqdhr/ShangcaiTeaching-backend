@@ -17,9 +17,9 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Table(name = "category_course_frequency")
+@Table(name = "experiment_frequency")
 @EntityListeners(AuditingEntityListener.class)
-public class CategoryCourseFrequencyEntity {
+public class ExperimentFrequencyEntity {
 
     @Id
     @GeneratedValue(generator = "system-uuid")
@@ -27,8 +27,8 @@ public class CategoryCourseFrequencyEntity {
     @Column(name = "id", nullable = false)
     private String id;
 
-    @Column(name = "category_id", nullable = false)
-    private String categoryID;
+    @Column(name = "experiment_id", nullable = false)
+    private String experimentID;
 
     @Column(name = "frequency", nullable = false)
     private int frequency;
