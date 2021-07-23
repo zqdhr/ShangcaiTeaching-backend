@@ -194,7 +194,7 @@ public class CourseServiceImpl implements CourseService {
         if (!op.get().getUserID().equals(deleteCoursePost.userID)) {
             return new Pair<>(false, "user_id is not the course creator");
         }
-        courseExperimentCategoryDao.deleteAllByCourseID(deleteCoursePost.courseID);
+        courseExperimentCategoryDao.deleteAllByLinkID(deleteCoursePost.courseID);
         courseClassDao.deleteAllByCourseID(deleteCoursePost.courseID);
         courseDao.deleteById(deleteCoursePost.courseID);
         return new Pair<>(true, "");

@@ -8,7 +8,7 @@ import java.util.List;
 
 @Repository
 public interface CourseExperimentCategoryDao extends JpaRepository<CourseExperimentCategoryEntity, String> {
-    List<CourseExperimentCategoryEntity> findAllByCourseID(String courseID);
+    List<CourseExperimentCategoryEntity> findAllByLinkID(String linkID);
 
-    void deleteAllByCourseID(String courseID);
+    void deleteAllByLinkID(String linkID);
 }
