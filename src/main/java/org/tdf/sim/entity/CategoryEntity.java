@@ -41,8 +41,8 @@ public class CategoryEntity {
     @Column(name = "priority")
     private int priority;
 
-    @Column(name = "link_id")
-    private String linkID;
+    @Column(name = "annex")
+    private String annex;
 
     /**
      * 1.目录 2.课程 3.实验
