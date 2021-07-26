@@ -61,6 +61,11 @@ dependencies {
     compile "org.postgresql:postgresql:${postgresql}"
     compile "com.alibaba:fastjson:${fastjson}"
     compile "com.github.kevinsawicki:http-request:${httpVersion}"
+
+    // https://mvnrepository.com/artifact/com.alibaba/fastjson
+    compile group: 'com.alibaba', name: 'fastjson', version: '1.2.75'
+    // https://mvnrepository.com/artifact/net.unicon.cas/cas-client-autoconfig-support
+    compile group: 'net.unicon.cas', name: 'cas-client-autoconfig-support', version: '2.3.0-GA'
 }
 
 test {
