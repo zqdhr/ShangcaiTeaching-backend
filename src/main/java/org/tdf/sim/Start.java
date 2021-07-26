@@ -1,5 +1,6 @@
 package org.tdf.sim;
 
+import net.unicon.cas.client.configuration.EnableCasClient;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -12,6 +13,7 @@ import org.springframework.web.filter.CorsFilter;
 @SpringBootApplication
 @EnableJpaAuditing
 @EnableScheduling
+@EnableCasClient
 public class Start {
     public static void main(String[] args) {
         SpringApplication app = new SpringApplication(Start.class);

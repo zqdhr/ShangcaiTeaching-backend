@@ -1,8 +1,13 @@
 package org.tdf.sim.controller;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.ui.ModelMap;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.tdf.sim.dao.UserDao;
@@ -10,16 +15,22 @@ import org.tdf.sim.entity.UserEntity;
 import org.tdf.sim.service.CourseService;
 import org.tdf.sim.service.SecurityService;
 import org.tdf.sim.type.Response;
+import org.tdf.sim.util.ApplicationUtils;
+import org.tdf.sim.util.ConstantUtils;
+import org.tdf.sim.util.LoginUser;
+import org.tdf.sim.util.MD5Utils;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 import java.util.regex.Pattern;
 
 @RestController
+@RequestMapping("/cas")
 public class LoginController {
 
     @Autowired
@@ -30,54 +41,71 @@ public class LoginController {
 
     private CourseService courseService;
 
+    private MD5Utils md5Utils;
+
     @Autowired
     public void setCourseService(CourseService courseService) {
         this.courseService = courseService;
     }
 
+    @Autowired
+    private HttpServletRequest request;
+
+    @Value("${cas.server-login-url}")
+    private String serverLoginUrl;
+
+    @Value("${cas.client-host-url}")
+    private String clientHostUrl;
+
+    @Value("${ilab.appid}")
+    private String appid;
+
+    @Value("${ilab.signature}")
+    private String signature;
+
 
     /**
      * 用户登录
      *
-     * @param id
-     * @param password
      * @return
      * @throws NoSuchElementException
      */
     @PostMapping("/login")
-    public Response<Map<String, Object>> login(@RequestParam(value = "id") String id,
-                                               @RequestParam(value = "password") String password,
-                                               @RequestParam(value = "loginType") String loginType,
-                                               HttpSession session) throws NoSuchElementException {
-        Map<String, Object> map = new HashMap<>();
-        Optional<UserEntity> optional1 = null;
-        if(loginType.equals("1")){
-            optional1 = userDao.findByIdAndRoleID(id,UserEntity.ROLE_ID.STUDENT);
-        }else if(loginType.equals("2")){
-            optional1 = userDao.findByIdAndRoleID(id,UserEntity.ROLE_ID.TEACHER);
-            if(!optional1.isPresent()){
-                optional1 = userDao.findByIdAndRoleID(id,UserEntity.ROLE_ID.MANAGER);
-            }
-        }else optional1 = userDao.findById(id);
-        if (optional1.isPresent()) {
-            Optional<UserEntity> optional = userDao.findById(id);
-            userDao.findByIdAndRoleID(id, optional.get().getRoleID());
-            if (optional.isPresent() && optional.get().getPassword().equals(password) && !StringUtils.isEmpty(password)) {
-                session.setAttribute("user_id", optional.get().getId());
-                map.put("id", optional.get().getId());
-                map.put("role_id", optional.get().getRoleID().getId());
-                if (loginType.equals("1")) {
-                    int size = courseService.getCourseHaveClasses(optional.get().getId(), 1).size();
-                    map.put("custom_course_size", size);
-                }
+    public Response<Map<String, Object>> login(@RequestParam(value = "ticket") String ticket,
+                                               @RequestParam(value = "type") int type,
+                                               HttpSession session, ModelMap map) throws NoSuchElementException, UnsupportedEncodingException {
+        //type 1:cas认证 2：ilab认证
+        if(type == 1){
+            String name = request.getRemoteUser();
+            System.out.println("name = "+name);
+            if("".equals(name) || name == null){
+                System.out.println("url=" + "redirect:" + serverLoginUrl + "?service=" + clientHostUrl);
+                map.put("url","url=" + "redirect:" + serverLoginUrl + "?service=" + clientHostUrl);
                 return Response.success(map);
-            } else {
-                return Response.error("密码错误");
             }
-        } else {
-            return Response.error("用户名不存在");
+            LoginUser userinfo = ApplicationUtils.getCurrentLoginUser(request);
+            System.out.println("userinfo="+userinfo);
+            System.out.println(ConstantUtils.USER_SESSION_KEY);
+            request.getSession().setAttribute(ConstantUtils.USER_SESSION_KEY,userinfo);
+            return Response.success();
+        }else if(type == 2){
+            String sign = ticket + appid + signature;
+            String sign_md5 = md5Utils.getMD5(sign.getBytes());
+            String url = "http://www.ilab-x.com/open/api/v2/token?ticket="+ ticket + "&appid=" + appid +"&signature=" + sign_md5;
+            String res = md5Utils.sendGet(url,"");
+            JSONObject jsonObject = JSON.parseObject(res);
+            int code = jsonObject.getInteger("code");
+            if (code == 0) {
+                return Response.success();
+            }else{
+                String message = jsonObject.getString("msg");
+                return Response.error(message);
+            }
+        }else{
+            return Response.success();
         }
     }
+
 
     @PostMapping("/createToken")
     public Response<Map<String, Object>> createToken(@RequestParam(value = "id") String id) {
